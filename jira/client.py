@@ -3471,6 +3471,7 @@ class JIRA:
         includeActive: bool = True,
         includeInactive: bool = False,
         query: str | None = None,
+        accountId: str | None = None,
     ) -> ResultList[User]:
         """Get a list of user Resources that match the specified search string.
 
@@ -3484,18 +3485,20 @@ class JIRA:
             includeActive (bool): True to include active users in the results. (Default: ``True``)
             includeInactive (bool): True to include inactive users in the results. (Default: ``False``)
             query (Optional[str]): Search term. It can just be the email.
+            accountId (Optional[str]): User's account ID to match against.
 
         Returns:
             ResultList[User]
         """
-        if not user and not query:
-            raise ValueError("Either 'user' or 'query' arguments must be specified.")
+        if not user and not query and not accountId:
+            raise ValueError("Either 'user' or 'query' or 'accountId' arguments must be specified.")
 
         params = {
             "username": user,
             "query": query,
             "includeActive": includeActive,
             "includeInactive": includeInactive,
+            "accountId": accountId,
         }
 
         return self._fetch_pages(User, None, "user/search", startAt, maxResults, params)
